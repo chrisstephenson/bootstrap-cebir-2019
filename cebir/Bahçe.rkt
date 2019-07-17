@@ -55,7 +55,7 @@
 (define (kuyu-dışında-mı? x y)
   true)
 
-;; hareket-edebilir-mi? : Sayı Sayı-> Mantıksal
+;; güvende-mi? : Sayı Sayı-> Mantıksal
 ;; Kelebek hareket edebilir mi? ?
 
 (define (güvende-mi? x y)
@@ -63,9 +63,6 @@
 
 ;;;; Animasyon otomatik olarak başlar
 ;;;; Kelebeği hareket ettirmek için ok tuşlarını kullan!
-
-
-
 (start güvende-mi? bahçe kuyu kelebek kuyu-x kuyu-y kelebek-ilk-x kelebek-ilk-y)
 
 
