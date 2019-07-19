@@ -6,7 +6,6 @@
          (except-in htdp/testing test)
          (for-syntax scheme/base))
 (provide (all-from-out "bootstrap-common.rkt"))
-;(provide-higher-order-primitive start (bahçe kuyu kelebek kuyu-x kuyu-y initial-x initial-y onscreen?))
 (provide-higher-order-primitive start (onscreen? bahçe kuyu kelebek kuyu-x kuyu-y initial-x initial-y))
 
 (define flame (list (bitmap "teachpack-images/flame_0.gif")

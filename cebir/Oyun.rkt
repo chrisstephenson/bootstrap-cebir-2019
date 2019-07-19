@@ -112,7 +112,7 @@
 ; Ekrandaki iki nokta arasındaki mesafe
 ; Oyuncunun x ve y, ve bir nesnenin x ve y koordinatları verilmiş
 ; Ne kadar uzaktırlar?
-; ÖRNEKler:
+; Örnekler:
 
 (define (mesafe px py cx cy)
   0)
@@ -121,7 +121,7 @@
 ; Ne kadar yakın yeterince yakındır?
 ; Oyuncunun x ve y koordinatları ve bir nesnenin x ve y koordinatları verilmiş
 ; Aralarındaki mesafeye bakıp çarpışıp çarpışmadıklarına karar veririz.
-; Örneklers:
+; Örnekler:
 (define (çarpıştı-mı? px py cx cy)
   false)
 
@@ -133,7 +133,7 @@
   200)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PROVIDED CODE
+;; VERİLEN KOD: Buraya dokunmayınız...
 
 (define g (make-game BAŞLIK BAŞLIK-RENGİ 
                      ARKAPLAN 

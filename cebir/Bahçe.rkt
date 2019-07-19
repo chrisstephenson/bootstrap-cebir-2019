@@ -56,8 +56,7 @@
   true)
 
 ;; güvende-mi? : Sayı Sayı-> Mantıksal
-;; Kelebek hareket edebilir mi? ?
-
+;; Kelebek yanmadan hareket edebilir mi? ?
 (define (güvende-mi? x y)
   (bahçe-içinde-mi? x y))
 
