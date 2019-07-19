@@ -3,9 +3,15 @@
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname Bahçe) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 (require "Teachpacks/bahce-teachpack.rkt")
 
-(define kelebek (scale 1 (bitmap "Teachpacks/teachpack-images/butterfly-01.png")))
-(define kuyu (bitmap "Teachpacks/teachpack-images/kuyu-01.png"))
-(define bahçe (bitmap "Teachpacks/teachpack-images/bahçe-01.png"))
+; gerçekten yazdığın kodu test etmek istiyorsan - random-imajler? true yap....
+(define random-imajler? false)
+
+
+
+(define kelebek (kelebek-imajı-üret random-imajler?))
+(define kuyu (kuyu-imajı-üret random-imajler?))
+(define bahçe (bahçe-imajı-üret random-imajler?))
+
 
 ;;;; Tanımların burada..bahçe boyutları, marjları
 (define bahçe-genişliği (image-width bahçe))
@@ -14,8 +20,8 @@
 (define kelebek-yüksekliği (image-height kelebek))
 (define kuyu-genişliği (image-width kuyu))
 (define kuyu-yüksekliği (image-height kuyu))
-(define kuyu-x 320)
-(define kuyu-y 200)
+(define kuyu-x (kuyu-x-üret bahçe kuyu random-imajler?))
+(define kuyu-y (kuyu-y-üret bahçe kuyu random-imajler?))
 (define kelebek-ilk-x 420)
 (define kelebek-ilk-y 300)
 

@@ -1,12 +1,66 @@
 #lang scheme/gui
-; make alarm, if butterfly goes out or over well butterfly burns up...
+; make alarm, if kelebek goes out or over well kelebek burns up...
 (require lang/prim
          lang/posn
          "bootstrap-common.rkt"
          (except-in htdp/testing test)
          (for-syntax scheme/base))
 (provide (all-from-out "bootstrap-common.rkt"))
+(provide kelebek-imajı-üret kuyu-imajı-üret bahçe-imajı-üret kuyu-x-üret kuyu-y-üret)
 (provide-higher-order-primitive start (onscreen? bahçe kuyu kelebek kuyu-x kuyu-y initial-x initial-y))
+
+
+
+(define kelebek-list (list
+                      (bitmap "teachpack-images/kelebek-01.png")
+                      (bitmap "teachpack-images/kelebek-02.png")
+                      (bitmap "teachpack-images/kelebek-03.png")
+                      ))
+(define kuyu-list (list
+                      (bitmap "teachpack-images/kuyu-01.png")
+                      (bitmap "teachpack-images/kuyu-02.png")
+                      (bitmap "teachpack-images/kuyu-03.png")
+                      ))
+(define bahçe-list (list
+                      (bitmap "teachpack-images/bahçe-01.png")
+                      (bitmap "teachpack-images/bahçe-02.png")
+                      (bitmap "teachpack-images/bahçe-03.png")
+                      (bitmap "teachpack-images/bahçe-04.png")
+                      ))
+
+
+
+
+(define (random-list-ref l)
+  (list-ref l (random (length l))))
+
+(define (random-list-ref-choose l random?)
+  (cond
+    (random? (random-list-ref l))
+    (else (list-ref l 0))))
+
+(define (kelebek-imajı-üret random?)
+  (random-list-ref-choose kelebek-list random?))
+
+(define (bahçe-imajı-üret random?)
+  (random-list-ref-choose bahçe-list random?))
+
+(define (kuyu-imajı-üret random?)
+  (random-list-ref-choose kuyu-list random?))
+
+(define (koord-üret içi dışı)
+    (+ (random (- dışı içi)) (/ içi 2)))
+
+(define (kuyu-x-üret bahçe kuyu random?)
+  (cond
+    (random? (koord-üret (image-width kuyu) (image-width bahçe)))
+    (else 320)))
+
+(define (kuyu-y-üret bahçe kuyu random?)
+  (cond
+    (random? (koord-üret (image-height kuyu) (image-height bahçe)))
+    (else 200)))
+
 
 (define flame (list (bitmap "teachpack-images/flame_0.gif")
                     (bitmap "teachpack-images/flame_1.gif")
@@ -94,7 +148,7 @@
 ;; draw-world: World -> Image 
 ;; create an image that represents the world 
 (define (draw-world w)
-  (let* ((draw-butterfly 
+  (let* ((draw-kelebek 
           (lambda (w scene)
             (place-image (kelebek-image w) 
                          (world-x w) 
@@ -110,7 +164,7 @@
                              (number->string (world-y w)))
               14 'black)
              scene))))
-    (draw-butterfly w 
+    (draw-kelebek w 
                     (draw-text w (place-image  (world-kuyu w)
                                                (world-kuyu-x w) 
                                                (- (image-height (world-bahçe w)) (world-kuyu-y w))
