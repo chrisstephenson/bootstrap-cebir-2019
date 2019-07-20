@@ -7,7 +7,7 @@
 ; Belli bir saniye sayısı sonrası roket ne kadar yüksek olacak?
 (ÖRNEK (roket-yüksekliği 0) 0)
 
-(define (roket-yüksekliği saniye) saniye)
+(define (roket-yüksekliği saniye) 0)
 
 
 ;;;; "Run" tıklanınca aşağıdan girilen bu satır roketin uçmasını sağlayacak

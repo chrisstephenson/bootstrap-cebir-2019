@@ -1,4 +1,5 @@
-#lang scheme/gui
+;#lang scheme/gui
+#lang racket
 ; make alarm, if kelebek goes out or over well kelebek burns up...
 (require lang/prim
          lang/posn

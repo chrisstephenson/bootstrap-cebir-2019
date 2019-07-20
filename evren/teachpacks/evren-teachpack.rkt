@@ -21,8 +21,5 @@
 (define-syntax-rule (STRUCT id body)
   (struct id body  #:inspector (make-inspector (current-inspector))))
 
-;(STRUCT v (x y))
-
-;(check-expect (v 1 1) (v 1 1))
 
 
