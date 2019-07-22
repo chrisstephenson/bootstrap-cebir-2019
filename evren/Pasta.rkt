@@ -1,6 +1,7 @@
 #lang racket
 (require 2htdp/universe)
 (require 2htdp/image)
+(require "teachpacks/evren-teachpack.rkt")
 
 ; veri yapı
 ; pasta:
@@ -10,7 +11,7 @@
 ; mesaj - string
 ; yarı-çap - sayı
 ; kat-kalınlık - sayı
-(struct pasta (renk kat mesaj mesaj-rengi yarı-çap kat-kalınlık) #:inspector (make-inspector (current-inspector)))
+(STRUCT pasta (renk kat mesaj mesaj-rengi yarı-çap kat-kalınlık))
 
 (define pasta-örneği
   (pasta "pink"  8 "Mutlu Yıllar!!!" "green" 200 20))
@@ -24,7 +25,7 @@
 
 (define (draw-katlar kat-sayısı renk yarı-çap kalınlık)
   (cond
-    ((= kat-sayısı 1) (draw-kat renk yarı-çap))
+    ((<= kat-sayısı 1) (draw-kat renk yarı-çap))
     (else  (overlay/align/offset "left" "top"  (draw-kat renk yarı-çap) 0 kalınlık 
                                      (draw-katlar (- kat-sayısı 1) renk yarı-çap kalınlık)))))
 
@@ -36,4 +37,3 @@
 ;;; Verilmiş kod sonu
 ;;; need to add testing!!!!!
 
-;; need to add automatic inspector...
