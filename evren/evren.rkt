@@ -1,97 +1,124 @@
 #lang racket
-; bootstrapworld reactive (ish) racket versiyonu
-; v-06-check-expect now works with specific inspector for structs - find a better solution
-; place-image/vc now uses center setting for alignment
-; latest struct syntax used
-(require 2htdp/universe)
-(require 2htdp/image)
-(require (only-in racket/gui/base play-sound))
-(require test-engine/racket-tests)
+(require "teachpacks/evren-teachpack.rkt")
+;; STRUCT v - vektör
+;; x : sayı - x koordinatı
+;; y : sayı - y koordinatı
 
-(check-expect(struct->vector (vc 0 0)) (struct->vector (vc 0 0)))
-(define FRAME-RATE 20)
-(define BACKGROUND (bitmap "imaj/kutuphane.jpg"))
-(define BACKGROUND-SCENE
-  (place-image/align (text "Evren 2019" 20 "white") 0 20 "left" "top"
-                     BACKGROUND))
+;; v+ - vektör toplama
+;; 
+;;
+;(ÖRNEK ....)
+;(ÖRNEK ....)
 
-; vc - vector
-; x - sayı, x kordinat
-; y - sayı, y kordinat
-(struct vc (x y) #:inspector (make-inspector (current-inspector)))
+;; v- - vektör çıkartma
+;; 
+;;
+;(ÖRNEK ....)
+;(ÖRNEK ....)
 
-; vc+ - topla vektor
-; vc+ vc vc -> vc
-(check-expect (vc+ (vc 2 3) (vc 9 2)) (vc 11 5))
-(check-expect (vc+ (vc -2 -3) (vc 9 2)) (vc 7 -1))
-(define (vc+ v1 v2)
-  (vc (+ (vc-x v1) (vc-x v2))
-           (+ (vc-y v1) (vc-y v2))))
+;; v* - vektör sayıyla çarpma
+;; 
+;;
+;(ÖRNEK ....)
+;(ÖRNEK ....)
 
-; vc- - çıkart vektor
-; vc- vc vc -> vc
-(check-expect (vc- (vc 2 3) (vc 9 2)) (vc -7 1))
-(check-expect (vc- (vc -2 -3) (vc 9 2)) (vc -11 -5))
-(define (vc- v1 v2)
-  (vc (- (vc-x v1) (vc-x v2))
-           (- (vc-y v1) (vc-y v2))))
+;; v. - vektör dot çarpma
+;; 
+;;
+;(ÖRNEK ....)
+;(ÖRNEK ....)
 
-; vc* - çarp vektor sayıyla
-; vc* vc sayı -> vc
-(check-expect (vc* (vc 2 3) 2) (vc 4 6))
-(check-expect (vc* (vc -2 -3) -3) (vc 6 9))
-(define (vc* v1 s)
-  (vc (* (vc-x v1) s)
-           (* (vc-y v1) s)))
+;; v-mag - vektör uzunluğu
+;; 
+;;
+;(ÖRNEK ....)
+;(ÖRNEK ....)
 
-(define (vc->text v)
-  (string-append "[" (number->string (vc-x v)) "," (number->string (vc-y v)) "]")) 
-
-
-(define (+-random n)
-  (* (random 0 n) (- 1 (* 2 (random 0 1)))))
-
-(define (random-vc x y)
-  (vc (+-random x) (+-random y)))
-
-
-
-; place-image/vc resim vc scene -> scene
-; bir sahneye vectora göre bir imaj yerleştir
-(define (place-image/vc im v sahne)
-  (place-image/align im (vc-x v) (vc-y v) "center" "center"  sahne))
-
-; place-line/vc vc vc color scene -> scene
-; add line from v1 to v2 to scene
-(define (place-line/vc v1 v2 renk s)
-  (add-line s (vc-x v1) (vc-y v1) (vc-x v2) (vc-y v2) renk )) 
-               
-(define (place-text/vc s v size col sahne)
-  (place-image/vc (text s size col) v sahne))
-
-
-
-               
-(struct dünya (boş))
-
-(define (dünya-ilerleme w) w)
-
-(define (dünya-çiz w)
-   BACKGROUND-SCENE)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hediye vektör çizim fonksiyonları
+;; Vektör STRUCT tanıttıktan sonra bu fonkisyonları uncomment edebilirsiniz
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;place-image/v
+;; resim v sahne -> sahne
+;; bir sahneye vectöre göre bir imaj yerleştir
+;; template :
+;; (define (place-image/v im v1 sahne)
+;;  (... im ... (v-x v1) ... (v-y v1) ...)
+;(define test-circle (circle 10 "solid" "purple"))
+;(define test-square (square 100 "solid" "green"))
+;
+;(ÖRNEK (place-image/v  test-circle (v 5 5) test-square)
+;       (place-image/align test-circle 5 5 "center" "center" test-square))
+;(ÖRNEK (place-image/v test-circle (v 3 8) test-square)
+;       (place-image/align test-circle 3 8 "center" "center" test-square))
+;(ÖRNEK (place-image/v test-circle (v 1 2) test-square)
+;       (place-image/align test-circle 1 2 "center" "center" test-square))
+;(ÖRNEK (place-image/v test-circle (v 2 8) test-square)
+;       (place-image/align test-circle 2 8 "center" "center" test-square))
+;
+;(define (place-image/v im v1 sahne)
+;  (place-image/align im (v-x v1) (v-y v1) "center" "center"  sahne))
+;
+;; place-line/v v v color görüntü -> görüntü
+;; v1'den v2'e giden bir çizgi arka imajına yerleştir
+;(ÖRNEK (place-line/v (v 2 3) (v 5 1) "red" test-square)
+;       (add-line test-square 2 3 5 1 "red")) 
+;
+;(define (place-line/v v1 v2 renk arka)
+;  (add-line arka (v-x v1) (v-y v1) (v-x v2) (v-y v2) renk)) 
+;
+;; place-text/v v metin sayı color görüntü -> görüntü
+;; v pozisyonda  verilen metni arka imajına yerleştir
+;(ÖRNEK (place-text/v (v 20 30) "Hello" 15 "red" test-square)
+;       (place-image/v (text "Hello" 15 "red") (v 20 30) test-square))
+;(define (place-text/v v metin size col arka)
+;  (place-image/v (text metin size col) v arka))
 
 
-(define (dünya-tuş w t)
-  w)
+; STRUCT nesne
+;; imaj : görüntü - nesneini imajı
+;; yer : v - nesnenin ekrandaki yeri
+;; hız : v - nesnenin hızı
+;; ivme : v - nesnenin ivmesi
 
-(define (dünya-fare w x y m) w)
 
-(define yaradılış (dünya 0))
 
+;; STRUCT evren
+;; arkaplanı : görüntü - oyun arka planı
+;;
+(STRUCT evren (arkaplanı))
+
+(define (evren-güncelle e)
+  e)
+
+(define (evren-çiz e)
+  (evren-arkaplanı e))
+
+(define (evren-tuş e t)
+  e)
+
+(define (evren-fare e x y m)
+  e)
+
+
+(define BACKGROUND (bitmap "imaj/kutuphane.jpg")) 
+
+(define FRAME-RATE 12)
+
+(define yaradılış (evren BACKGROUND))
+
+;; SES herhangbirşey ses-dosyası-metin -> herhangibirşey
+;; birinci paramatresini aynen dönsürüyor, sesi çalarak
+(ÖRNEK (SES 0 "ses/bark.wav") 0)
 
 (test)
 
-(big-bang yaradılış
-  (on-tick dünya-ilerleme (/ 1.0 FRAME-RATE))
-  (on-draw dünya-çiz)
-  (on-key dünya-tuş)
-  (on-mouse dünya-fare))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sabit kod bundan sonra                               ;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(yut (big-bang yaradılış
+  (on-tick evren-güncelle (/ 1.0 FRAME-RATE))
+  (on-draw evren-çiz)
+  (on-key evren-tuş)
+  (on-mouse evren-fare)))
+

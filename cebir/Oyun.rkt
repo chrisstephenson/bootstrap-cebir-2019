@@ -55,20 +55,20 @@
 ;;    Nereye gittiklerini bilmemiz lazım
 ;;    Ekranın içindeler mi?
 
-; sol-güvenli? : Sayı -> Mantıksal
+; ekran-solundan-çıkmamış? : Sayı -> Mantıksal
 ; Karakter oyun ekranının solundan içeride mi?
 
 ; Bunun doğru olduğu ve yanlış olduğu birer örnek yazın
 
-(define (sol-güvenli? x)
+(define (ekran-solundan-çıkmamış? x)
   true)
 
-; sağ-güvenli? : Sayı -> Mantıksal
+; ekran-sağından-çıkmamış? : Sayı -> Mantıksal
 ; Karakter oyun ekranının sağından içeride mi?
 
 ; Bunun doğru olduğu ve yanlış olduğu birer örnek yazın
 
-(define (sağ-güvenli? x)
+(define (ekran-sağından-çıkmamış? x)
   true)
 
 ; ekranda? : Sayı -> Mantıksal
@@ -76,7 +76,7 @@
 
 ;; ÖRNEKler:
 
-(define (ekranda-mı? x)
+(define (ekranda-görünüyor-mı? x)
   true)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
