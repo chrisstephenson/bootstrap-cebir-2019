@@ -1,0 +1,13 @@
+#lang racket
+(require "teachpacks/evren-teachpack.rkt")
+(require "evren.rkt")
+
+(STRUCT anim ( devamlı değişim-sıklığı zaman resimler))
+
+(define örnek-anim (anim true 4 12 (list (bitmap "megaman sprites/running-shooting-1")
+                                         (bitmap "megaman sprites/running-shooting-2")
+                                         (bitmap "megaman sprites/running-shooting-3")
+                                         (bitmap "megaman sprites/running-shooting-2"))))
+
+;anim-çiz anim sayı -> görüntü
+(define (anim-çiz a f) (list-ref (anim-resimler a) (- f 1)))
