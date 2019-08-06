@@ -10,10 +10,10 @@
 (define vektör-örnek-2 (v 20 20))
 (define vektör-örnek-3 (v 12 5))
 (define vektör-örnek-4 (v 200 100) )
-(define BACKGROUND (bitmap "Teachpacks/teachpack-images/arkaplan-1.png"))
-(define sahne3 (bitmap "Teachpacks/teachpack-images/oyunsonu.png"))
-(define sahne0 (bitmap "Teachpacks/teachpack-images/giriş-ekranı.png"))
-(define BACKGROUND2 (bitmap "Teachpacks/teachpack-images/arkaplan-2.png"))
+(define BACKGROUND (bitmap "teachpacks/teachpack-images/arkaplan-1.png"))
+(define sahne3 (bitmap "teachpacks/teachpack-images/oyunsonu.png"))
+(define sahne0 (bitmap "teachpacks/teachpack-images/giriş-ekranı.png"))
+(define BACKGROUND2 (bitmap "teachpacks/teachpack-images/arkaplan-2.png"))
 (STRUCT nesne (imaj yer hız ivme))
 ;imaj görüntü
 ;yer vektör
@@ -46,11 +46,11 @@
 
 ;anim-çiz anim-> görüntü
 ;(ÖRNEK (anim-çiz
-;        (anim true 3 13 (list (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png")
-;                             (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_2.png")
-;                              (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_3.png")
-;                              (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_4.png"))))
-;       (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png"))
+;        (anim true 3 13 (list (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png")
+;                             (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_2.png")
+;                              (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_3.png")
+;                              (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_4.png"))))
+;       (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png"))
 ;
 ;(define (anim-çiz a) (list-ref
 ;                      (anim-resimler a)
@@ -59,14 +59,14 @@
 
 ;anim-güncelle anim -> anim
 ;anim zaman artmak
-;(ÖRNEK (anim-güncelle (anim #true 3 11 (list (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png")
-;                                           (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_2.png")
-;                                          (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_3.png")
-;                                           (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_4.png"))))
-;     (anim #true 3 0 (list (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png")
-;                                           (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_2.png")
-;                                            (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_3.png")
-;                                            (bitmap "Teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_4.png"))))
+;(ÖRNEK (anim-güncelle (anim #true 3 11 (list (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png")
+;                                           (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_2.png")
+;                                          (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_3.png")
+;                                           (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_4.png"))))
+;     (anim #true 3 0 (list (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_1.png")
+;                                           (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_2.png")
+;                                            (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_3.png")
+;                                            (bitmap "teachpacks/teachpack-images/caveman/cavemanrunning/cavemanrunning_4.png"))))
 ;anim-güncelle anim -> anim
 ;(define (anim-güncelle a)
 ;  (anim
@@ -93,7 +93,7 @@
 (define konum-dinazor (v 350 438))
 (define hız-dinazor (v -10 0))
 (define ivme-dinazor (v 0 0))
-(define nesne-dinazor (nesne (bitmap "Teachpacks/teachpack-images/tyranosaur/tyranosaurstanding/tyranosaurstanding.png")
+(define nesne-dinazor (nesne (bitmap "teachpacks/teachpack-images/tyranosaur/tyranosaurstanding/tyranosaurstanding.png")
                              konum-dinazor
                              hız-dinazor
                              ivme-dinazor ) )
@@ -103,7 +103,7 @@
 (define konum-caveman (v 320 440))
 (define hız-caveman (v 0 0))
 (define ivme-caveman (v 0 0))
-(define nesne-caveman (nesne (bitmap "Teachpacks/teachpack-images/caveman/cavemanstanding/cavemanstanding_1.png")
+(define nesne-caveman (nesne (bitmap "teachpacks/teachpack-images/caveman/cavemanstanding/cavemanstanding_1.png")
                              konum-caveman
                              hız-caveman
                              ivme-caveman ) )
@@ -111,7 +111,7 @@
 (define konum-hedef (v 100 480))
 (define hız-hedef (v 0 9))
 (define ivme-hedef (v 0 0))
-(define nesne-hedef (nesne (bitmap "Teachpacks/teachpack-images/yemek-1.png")
+(define nesne-hedef (nesne (bitmap "teachpacks/teachpack-images/yemek-1.png")
                              konum-hedef
                              hız-hedef
                              ivme-hedef ) )
@@ -127,7 +127,7 @@
 (define konum-flytrap (v 350 438))
 (define hız-flytrap (v -10 0))
 (define ivme-flytrap (v 0 0))
-(define nesne-flytrap (nesne (flip-horizontal (bitmap "Teachpacks/teachpack-images/flytrap/flytrapstanding/flytrapstanding-1.png"))
+(define nesne-flytrap (nesne (flip-horizontal (bitmap "teachpacks/teachpack-images/flytrap/flytrapstanding/flytrapstanding-1.png"))
                              konum-flytrap
                              hız-flytrap
                              ivme-flytrap ) )
@@ -136,7 +136,7 @@
 (define konum-zemin (v 320 473))
 (define hız-zemin (v 0 0))
 (define ivme-zemin (v 0 0))
-(define nesne-zemin (nesne (bitmap "Teachpacks/teachpack-images/zemin-1.png")
+(define nesne-zemin (nesne (bitmap "teachpacks/teachpack-images/zemin-1.png")
                              konum-zemin
                              hız-zemin
                              ivme-zemin ) )
@@ -144,7 +144,7 @@
 (define konum-taşzemin (v 320 473))
 (define hız-taşzemin (v 0 0))
 (define ivme-taşzemin (v 0 0))
-(define nesne-taşzemin (nesne (bitmap "Teachpacks/teachpack-images/zemin-2.png")
+(define nesne-taşzemin (nesne (bitmap "teachpacks/teachpack-images/zemin-2.png")
                              konum-taşzemin
                              hız-taşzemin
                              ivme-taşzemin ) )
@@ -406,7 +406,7 @@
 (define (nesne-yerde-durdur n y-limit)
   (cond
     ((>= (v-y (nesne-yer n)) y-limit)
-     (nesne (bitmap "Teachpacks/teachpack-images/caveman/cavemanstanding/cavemanstanding_1.png")
+     (nesne (bitmap "teachpacks/teachpack-images/caveman/cavemanstanding/cavemanstanding_1.png")
             (v (v-x (nesne-yer n)) y-limit)
             (v (v-x (nesne-hız n)) 0)
             (v (v-x (nesne-ivme n)) 0)))
@@ -438,7 +438,7 @@
 (define (zıplat n) (cond
                      ((> (- (v-y (nesne-yer n)) (/ (image-height (nesne-imaj n)) 2)) 0)
                       (nesne
-                       (bitmap "Teachpacks/teachpack-images/caveman/cavemanjumping/cavemanjumping_1.png")
+                       (bitmap "teachpacks/teachpack-images/caveman/cavemanjumping/cavemanjumping_1.png")
                        (nesne-yer n)
                        (v+v (nesne-hız n) (v  0 -8))
                        (v 0 1.5)))

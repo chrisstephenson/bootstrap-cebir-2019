@@ -1,0 +1,553 @@
+#lang racket
+(require "teachpacks/evren-teachpack.rkt")
+
+
+;struct (v x(sayı) y(sayı)) -> vektör
+(STRUCT v (x y))
+
+(define v-örneği (v 3 4))
+(define v-örneği-2 (v 5 12))
+
+;vector-scale vector sayı -> vector
+;vektörü bir sayı ile çarpar
+(define (v* vector s ) (v
+                             (* s (v-x vector))
+                             (* s (v-y vector))))
+(check-expect (v* v-örneği 2) (v 6 8))
+
+;çizgi-uzunluğu sayı sayı -> sayı
+;iki sayı arası pozitif farkı bulur
+(define (çizgi-uzunluğu a b)
+  (- (max a b) (min a b)))
+(ÖRNEK (çizgi-uzunluğu 5 3) 2)
+(ÖRNEK (çizgi-uzunluğu 3 5) 2)
+
+(define (mesafe px py cx cy)
+  (sqrt (+ (sqr (çizgi-uzunluğu px cx)) ( sqr (çizgi-uzunluğu py cy)) ) ) )
+(ÖRNEK (mesafe 4 0 0 3) 5)
+(ÖRNEK (mesafe 12 0 0 5) 13)
+
+;vector* vector vector -> sayı
+;vektör dot çarpımı yapar
+(define (v. v1 v2 ) 
+                         (+ (* (v-x v1) (v-x v2))
+                          (* (v-y v1) (v-y v2))))
+(check-expect (v. v-örneği v-örneği-2) 63)
+
+;vector+ vector vector -> vector
+;vektör toplaması yapar
+(define (v+ v1 v2 ) (v
+                          (+ (v-x v1) (v-x v2))
+                          (+ (v-y v1) (v-y v2))))
+(check-expect (v+ v-örneği v-örneği-2) (v 8 16))
+
+;vector- vector vector-> vector
+;vektörler arası çıkartma yapar
+(define (v- v1 v2) (v (- (v-x v1) (v-x v2) ) (- (v-y v1) (v-y v2))))
+(check-expect (v- v-örneği v-örneği-2) (v -2 -8))
+
+;vector-uzunluk vector -> sayı
+;vektörün uzunluğunu bulur
+(define (v-mag v)  (sqrt (+ (sqr (v-x v)) ( sqr (v-y v)) ) ))
+(check-expect (v-mag v-örneği) 5)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Hediye vektör çizim fonksiyonları
+; Vektör STRUCT tanıttıktan sonra bu fonkisyonları uncomment edebilirsiniz
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;place-image/v
+; resim v sahne -> sahne
+; bir sahneye vectöre göre bir imaj yerleştir
+; template :
+; (define (place-image/v im v1 sahne)
+;  (... im ... (v-x v1) ... (v-y v1) ...)
+(define test-circle (circle 10 "solid" "purple"))
+(define test-square (square 100 "solid" "green"))
+
+(ÖRNEK (place-image/v  test-circle (v 5 5) test-square)
+       (place-image/align test-circle 5 5 "center" "center" test-square))
+(ÖRNEK (place-image/v test-circle (v 3 8) test-square)
+       (place-image/align test-circle 3 8 "center" "center" test-square))
+(ÖRNEK (place-image/v test-circle (v 1 2) test-square)
+       (place-image/align test-circle 1 2 "center" "center" test-square))
+(ÖRNEK (place-image/v test-circle (v 2 8) test-square)
+       (place-image/align test-circle 2 8 "center" "center" test-square))
+
+(define (place-image/v im v1 sahne)
+  (place-image/align im (v-x v1) (v-y v1) "center" "center"  sahne))
+
+; place-line/v v v color görüntü -> görüntü
+; v1'den v2'e giden bir çizgi arka imajına yerleştir
+(ÖRNEK (place-line/v (v 2 3) (v 5 1) "red" test-square)
+       (add-line test-square 2 3 5 1 "red")) 
+
+(define (place-line/v v1 v2 renk arka)
+  (add-line arka (v-x v1) (v-y v1) (v-x v2) (v-y v2) renk)) 
+
+; place-text/v v metin sayı color görüntü -> görüntü
+; v pozisyonda  verilen metni arka imajına yerleştir
+(ÖRNEK (place-text/v (v 20 30) "Hello" 15 "red" test-square)
+       (place-image/v (text "Hello" 15 "red") (v 20 30) test-square))
+(define (place-text/v v metin size col arka)
+  (place-image/v (text metin size col) v arka))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;tuş-kontrol
+;tuş-değeri : metin
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+; STRUCT nesne
+; hayat : boolean - nesnenin var olup olmadığı
+; imaj : görüntü - nesnenin imajı
+; yer : v - nesnenin ekrandaki yeri
+; hız : v - nesnenin hızı
+; ivme : v - nesnenin ivmesi
+(STRUCT nesne (hayat imaj yer hız ivme))
+
+(define örnek-nesne-1 (nesne true (circle 10 "solid" "red") (v 10 10) (v 10 0) (v 0 0)))
+(define örnek-nesne-2 (nesne false (circle 10 "solid" "blue") (v 0 0) (v 0 10) (v 0 0)))
+
+
+
+(define ship-base (rotate 90 (polygon (list (make-pulled-point 1/2 20 0 0 1/2 -20)
+                                            (make-pulled-point 0 0 -10 20 0 0)
+                                            (make-pulled-point 1/2 -20 60 0 1/2 20)
+                                            (make-pulled-point 0 0 -10 -20 0 0))
+                                      "solid" "white")))
+(define ship-back (overlay/offset 
+                   (overlay/offset (rectangle 80 20 "solid" "purple") 35 -30 (rotate 90 (polygon (list (make-pulled-point 1/2 20 0 0 1/2 -20)
+                                                                                                       (make-pulled-point 0 0 -10 5 0 0)
+                                                                                                       (make-pulled-point 1/2 -20 60 0 1/100 20)
+                                                                                                       (make-pulled-point 0 0 -10 -5 0 0))
+                                                                                                 "solid" "purple"))) -35 0 (flip-horizontal (rotate 90 (polygon (list (make-pulled-point 1/2 20 0 0 1/2 -20)
+                                                                                                                                                       (make-pulled-point 0 0 -10 5 0 0)
+                                                                                                                                                       (make-pulled-point 1/2 -20 60 0 1/100 20)
+                                                                                                                                                       (make-pulled-point 0 0 -10 -5 0 0))
+                                                                                                                                                 "solid" "purple")))))
+
+
+(define (random-star g)  (place-image/v (circle (random 1 3) "solid" "white") (v (random 5 (- (image-width g) 5)) (random 5 (- (image-height g) 5))) g))
+
+(define BACKGROUND (random-star
+                    (random-star
+                     (random-star
+                      (random-star
+                       (random-star
+                        (random-star
+                         (random-star
+                          (random-star
+                           (random-star
+                            (random-star
+                             (random-star
+                              (random-star
+                               (random-star
+                                (random-star
+                                 (random-star
+                    (random-star
+                     (random-star
+                      (random-star
+                       (random-star
+                        (random-star
+                         (random-star
+                          (random-star
+                           (random-star
+                            (random-star
+                             (random-star
+                              (random-star
+                               (random-star
+                                (random-star
+                                 (random-star
+                                  (random-star
+                                   (random-star
+                                    (random-star
+                                     (random-star(random-star(rectangle 600 600 "solid" "black"))))))))))))))))))))))))))))))))))))
+
+(define FRAME-RATE 30)
+
+(define sayaç 0)
+
+;sayaç-update sayı -> sayı
+;her çalıştığında verilen fonksiyona 1 ekler
+(define (sayaç-update s) (cond((<= s FRAME-RATE)(+ s 1))
+                              (else (- s (- FRAME-RATE 1)))))
+
+;düşman-ateş-sayacı sayı -> sayı
+;her saniye 3 kez ateş etmesini sağlar
+(define (düşman-ateş-sayacı s) (quotient s (/ FRAME-RATE 3)))
+
+(define space-ship-2-imaj (flip-vertical (overlay/offset ship-back 0 0 ship-base)))
+
+(define wing (triangle/sss 20 50 50 "solid" "red"))
+(define space-ship-1-imaj (overlay/offset (overlay/offset ship-base 20 35 (rotate 135 wing)) -30 25 (flip-horizontal (rotate 135 wing))))
+(define laser-imaj (overlay (ellipse 5 20 "solid" "orange") (ellipse 10 40 "solid" "white")))
+
+(define space-ship-1 (nesne true space-ship-1-imaj (v 300 550) (v 0 0) (v 0 0)))
+(define space-ship-2 (nesne true space-ship-2-imaj (v -40 50) (v 10 0) (v 0 0)))
+(define laser-1 (nesne false laser-imaj (nesne-yer space-ship-1) (v 0 -40) (v 0 0)))
+(define laser-2 (nesne false laser-imaj (nesne-yer space-ship-1) (v 0 -40) (v 0 0)))
+(define laser-3 (nesne false laser-imaj (nesne-yer space-ship-1) (v 0 -40) (v 0 0)))
+(define laser-4 (nesne false laser-imaj (v 50 50) (v 0 40) (v 0 0)))
+(define laser-5 (nesne false laser-imaj (v 150 50) (v 0 40) (v 0 0)))
+(define laser-6 (nesne false laser-imaj (v 250 50) (v 0 40) (v 0 0)))
+
+(define death-anim (square 0 "solid" "black"))
+
+(define (sağ-b g) (- (image-width BACKGROUND) (/ (image-width g) 2)))
+(define (sol-b g) (/ (image-width g) 2))
+(define (üst-b g) (/ (image-height g) 2))
+(define (alt-b g) (- (image-height BACKGROUND) (/ (image-height g) 2) ))
+(define (n-x n)(v-x (nesne-yer n)))
+(define (n-y n)(v-y (nesne-yer n)))
+
+;border-x nesne -> boolean 
+;x sınırlarının içindemi?
+(define (border-x n) (= (min (n-x n) (sağ-b (nesne-imaj n))) (max (n-x n) (sol-b (nesne-imaj n)))))
+
+(ÖRNEK (border-x laser-1) true)
+(ÖRNEK (border-x space-ship-2) false)
+
+;border-y nesne-> boolean
+;y sınıarlarınıniçindemi?
+(define (border-y n) (= (max (n-y n) (üst-b (nesne-imaj n))) (min (n-y n) (alt-b (nesne-imaj n)))))
+(ÖRNEK (border-y (nesne true death-anim (v 0 10000) (v 0 0) (v 0 0))) false)
+(ÖRNEK (border-y laser-1) true)
+
+;hız-değiştir nesne-> vector
+;eğer verilen nesne x sınırları dışında ise o nesnenin hız vektörünün x değerini negatif yapar
+(define (hız-değiştir n s)(v (cond  ((border-x n)   (v-x (nesne-hız n)))
+                                      ((= s 2) (- 0 (v-x (nesne-hız n))))
+                                      (else (v-x(nesne-hız n))))
+                           (v-y (nesne-hız n))))
+(ÖRNEK (hız-değiştir space-ship-2 2) (v -10 0))
+(ÖRNEK (hız-değiştir laser-1 2) (v 0 -40))
+
+;set-yer nesne-> vector
+;verilen nesnenin konumunu sınırlara göre değiştirir
+(define (set-yer n) (v (cond((border-x n)(n-x n))
+                          ((< (n-x n) (/ (image-width BACKGROUND) 2))(sol-b (nesne-imaj n)))
+                          (else (sağ-b (nesne-imaj n))))
+                     (cond((border-y n) (n-y n))
+                          ((< (n-y n) (/ (image-height BACKGROUND) 2)) (üst-b (nesne-imaj n)))
+                          (else (alt-b (nesne-imaj n))))))
+(ÖRNEK (set-yer (nesne true death-anim (v 0 1000) (v 0 0) (v 0 0))) (v 0 (alt-b death-anim)))
+(ÖRNEK (set-yer laser-1) (nesne-yer laser-1))
+
+
+
+(define (evren-fare e x y m)
+  e)
+
+
+;death-check nesne nesne -> nesne
+;iki nesne birbiri üzerinde duruyor ise ilk nesnenin ölü bir ikizi yaratılır
+(define (death-check n1 n2) (nesne (cond ((not(nesne-hayat n1)) false )
+                                         ((not(nesne-hayat n2))  true)
+                                         ((< (mesafe (n-x n1) (n-y n1) (n-x n2) (n-y n2))
+                                            (/ (+ (image-width (nesne-imaj n1))
+                                               (image-width (nesne-imaj n2))) 2)) false )
+                                         (else true))
+                                   (nesne-imaj n1)
+                                   (nesne-yer n1)
+                                   (nesne-hız n1)
+                                   (nesne-ivme n1)))
+(ÖRNEK (death-check laser-1 laser-2) (nesne false (nesne-imaj laser-1) (nesne-yer laser-1) (nesne-hız laser-1) (nesne-ivme laser-1)))
+(ÖRNEK (death-check space-ship-2 laser-1) space-ship-2)
+
+;fizik-düzelt nesne -> nesne
+;ekran dışında ise yerini değiştirir , düşman ise hızını değiştirir.
+(define (fizik-düzelt n s) (nesne (nesne-hayat n)
+                                (nesne-imaj n)
+                                (set-yer n);
+                                (hız-değiştir n s);
+                                (nesne-ivme n)))
+
+(ÖRNEK (fizik-düzelt örnek-nesne-1 2) örnek-nesne-1)
+
+;laser-fizik-düzelt nesne -> nesne
+;laserlerin hayatını ekrandan çıktıklarında günceller
+(define (laser-fizik-düzelt n) (nesne
+                                (cond ((not(nesne-hayat n)) false )
+                                      ((<= (n-y n) (üst-b (nesne-imaj n))) false )
+                                      ((>= (n-y n) (alt-b (nesne-imaj n))) false)
+                                      (else true))
+                                (nesne-imaj n)
+                                (nesne-yer n)
+                                (nesne-hız n)
+                                (nesne-ivme n)))
+
+(ÖRNEK (laser-fizik-düzelt örnek-nesne-2) örnek-nesne-2)
+(ÖRNEK (laser-fizik-düzelt örnek-nesne-1) (nesne false
+                                                 (nesne-imaj örnek-nesne-1)
+                                                 (nesne-yer örnek-nesne-1)
+                                                 (nesne-hız örnek-nesne-1)
+                                                 (nesne-ivme örnek-nesne-1)))
+
+;laser-ateşle nesne metin -> nesne
+;seçilen 2. nesneyi 1. nesnenin konumuna taşır 
+(define (laser-ateşle n1 n2)
+(nesne true
+       (nesne-imaj n2)
+       (nesne-yer n1)
+       (nesne-hız n2)
+       (nesne-ivme n2)))
+(ÖRNEK (laser-ateşle örnek-nesne-2 örnek-nesne-1) (nesne true
+                                                         (nesne-imaj örnek-nesne-1)
+                                                         (v 0 0)
+                                                         (nesne-hız örnek-nesne-1)
+                                                         (nesne-ivme örnek-nesne-1)))
+(ÖRNEK (laser-ateşle örnek-nesne-1 örnek-nesne-2) (nesne true
+                                                         (nesne-imaj örnek-nesne-2)
+                                                         (nesne-yer örnek-nesne-1)
+                                                         (nesne-hız örnek-nesne-2)
+                                                         (nesne-ivme örnek-nesne-2)) )
+
+(define (düşman-laser-ateşle n1 n2 s1 s2) (if (and (not(nesne-hayat n2))(nesne-hayat n1)(= s1 s2 )) (laser-ateşle n1 n2) n2))
+
+
+; STRUCT evren
+; arkaplanı : görüntü - oyun arka planı
+; n1 : nesne - oyuncu
+; n2 : nesne - düşman(lar)
+; n3 : nesne - oyuncunun laseri
+; n4 : nesne - oyuncunun laseri
+; n5 : nesne - oyuncunun laseri
+; n6 : nesne - düşmanın laseri
+; n7 : nesne - düşmanın laseri
+; n8 : nesne - düşmanın laseri
+; s : sayı - frame sayacı
+
+(STRUCT evren (arkaplanı n1 n2 n3 n4 n5 n6 n7 n8 s))
+
+(define örnek-evren (evren BACKGROUND
+                         (nesne true (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0))
+                         (nesne false (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0)) 
+                         (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0))
+                         1))
+
+ 
+
+(define yaradılış (evren BACKGROUND space-ship-1 space-ship-2 laser-1 laser-2 laser-3 laser-4 laser-5 laser-6 sayaç))
+
+;tuş-konrol evren metin -> evren
+;alınan tuş verisine göre evrenin 1. nesnesinin hız vektörünün x değerinden ya 10 çıkarır ya da 10 ile toplar yada evreni geri verir
+(define (tuş-kontrol  e t )
+  (cond ((and (string=? t "right") (= (v-x (nesne-hız (evren-n1 e))) 10)) (evren
+           (evren-arkaplanı e)
+           (nesne (nesne-hayat (evren-n1 e))
+                  (nesne-imaj (evren-n1 e))
+                  (nesne-yer (evren-n1 e))
+                  (v (- (v-x (nesne-hız (evren-n1 e))) 10) (v-y (nesne-hız (evren-n1 e))))
+                  (nesne-ivme (evren-n1 e)))
+           (evren-n2 e)
+           (evren-n3 e)
+           (evren-n4 e)
+           (evren-n5 e)
+           (evren-n6 e)
+           (evren-n7 e)
+           (evren-n8 e)
+           (evren-s e)) )
+        ((and (string=? t "left") (= (v-x (nesne-hız (evren-n1 e))) -10)) (evren
+           (evren-arkaplanı e)
+           (nesne (nesne-hayat (evren-n1 e))
+                  (nesne-imaj (evren-n1 e))
+                  (nesne-yer (evren-n1 e))
+                  (v (+ (v-x (nesne-hız (evren-n1 e))) 10) (v-y (nesne-hız (evren-n1 e))))
+                  (nesne-ivme (evren-n1 e)))
+           (evren-n2 e)
+           (evren-n3 e)
+           (evren-n4 e)
+           (evren-n5 e)
+           (evren-n6 e)
+           (evren-n7 e)
+           (evren-n8 e)
+           (evren-s e)) )
+        (else e)))
+
+
+
+
+;gemi-laser-ateşle evren metin -> evren
+;hangi laserin ateşleneceğini seçer ve ateşler , basılan yön tuşuna göre oyuncunun hızını belirler (eğer hız vektörünün x değeri 10 ile -10 arasında ise)
+(define (evren-tuş e t)
+  (cond ((string=? t "z")
+         (evren
+          (evren-arkaplanı e)
+          (evren-n1 e)
+          (evren-n2 e)
+          (if (and (not(nesne-hayat (evren-n3 e))) (nesne-hayat (evren-n4 e)) (nesne-hayat (evren-n5 e)) (nesne-hayat (evren-n1 e)))
+              (laser-ateşle (evren-n1 e) (evren-n3 e)) (evren-n3 e))
+          (if (and (nesne-hayat (evren-n5 e)) (not(nesne-hayat (evren-n4 e))) (nesne-hayat (evren-n1 e)))
+              (laser-ateşle (evren-n1 e) (evren-n4 e)) (evren-n4 e))
+          (if (and (not(nesne-hayat (evren-n5 e)))(nesne-hayat (evren-n1 e)))
+              (laser-ateşle (evren-n1 e) (evren-n5 e)) (evren-n5 e))
+          (evren-n6 e)
+          (evren-n7 e)
+          (evren-n8 e)
+          (evren-s e)))
+        ((and (string=? t "right") (< (v-x (nesne-hız (evren-n1 e))) 10)) (evren
+           (evren-arkaplanı e)
+           (nesne (nesne-hayat (evren-n1 e))
+                  (nesne-imaj (evren-n1 e))
+                  (nesne-yer (evren-n1 e))
+                  (v (+ 10 (v-x (nesne-hız (evren-n1 e)))) (v-y (nesne-hız (evren-n1 e))))
+                  (nesne-ivme (evren-n1 e)))
+           (evren-n2 e)
+           (evren-n3 e)
+           (evren-n4 e)
+           (evren-n5 e)
+           (evren-n6 e)
+           (evren-n7 e)
+           (evren-n8 e)
+           (evren-s e)) )
+        ((and(string=? t "left") (> (v-x (nesne-hız (evren-n1 e))) -10)) (evren
+           (evren-arkaplanı e)
+           (nesne (nesne-hayat (evren-n1 e))
+                  (nesne-imaj (evren-n1 e))
+                  (nesne-yer (evren-n1 e))
+                  (v (- (v-x (nesne-hız (evren-n1 e))) 10) (v-y (nesne-hız (evren-n1 e))))
+                  (nesne-ivme (evren-n1 e)))
+           (evren-n2 e)
+           (evren-n3 e)
+           (evren-n4 e)
+           (evren-n5 e)
+           (evren-n6 e)
+           (evren-n7 e)
+           (evren-n8 e)
+           (evren-s e)) )
+        ((string=? t " ") yaradılış)
+        (else e)))
+
+(ÖRNEK (evren-tuş örnek-evren "") örnek-evren)
+(ÖRNEK (evren-tuş örnek-evren "z") (evren
+                                    BACKGROUND
+                                    (evren-n1 örnek-evren)
+                                    (evren-n2 örnek-evren)
+                                    (evren-n3 örnek-evren)
+                                    (nesne true (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                                    (evren-n5 örnek-evren)
+                                    (evren-n6 örnek-evren)
+                                    (evren-n7 örnek-evren)
+                                    (evren-n8 örnek-evren)
+                                    1))
+;((not(nesne-hayat n3)) (laser-ateşle n1 n3 t))
+;        ((not(nesne-hayat n4)) (laser-ateşle n1 n4 t))
+;        ((not(nesne-hayat n5)) (laser-ateşle n1 n5 t))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;nesne-çiz nesne görüntü -> görüntü
+;eğer nesne hayatta ise onun görüntüsünü seçilen görüntünün üstüne koyar
+(define (nesne-çiz n g) (if (nesne-hayat n) (place-image/v (nesne-imaj n) (nesne-yer n) g) (place-image/v death-anim (nesne-yer n) g)))
+(ÖRNEK (nesne-çiz (nesne  true
+                         (square 20 "solid" "green")
+                         (v 50 50)
+                         (v 0 0)
+                         (v 0 0))
+                  (square 500 "solid" "pink"))
+       (place-image/v (square 20 "solid" "green") (v 50 50) (square 500 "solid" "pink") ))
+(define nesne-örneği (nesne true (square 20 "solid" "green")
+                         (v 50 50)
+                         (v 0 0)
+                         (v 0 0)))
+
+;nesne-fizik-güncelle nesne -> nesne
+;nesnenin yer ,hız ,ivme vektörlerine göre yer ve hız vektörlerini değiştirir
+(define (nesne-fizik-güncelle n) (nesne (nesne-hayat n)(nesne-imaj n) (v+ (nesne-yer n) (nesne-hız n)) (v+ (nesne-ivme n) (nesne-hız n)) (nesne-ivme n)))
+(ÖRNEK (nesne-fizik-güncelle (nesne true (square 40 "solid" "pink") (v 3 5) (v 5 6) (v 1 8))) (nesne true (square 40 "solid" "pink") (v 8 11) (v 6 14) (v 1 8)))
+
+;evren-çiz evren -> görüntü
+;evrenin nesnelerini evrenin arkaplanının üstüne çizer
+
+(ÖRNEK (evren-çiz (evren BACKGROUND
+                         (nesne true (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0)) 
+                         (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                         (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0))
+                         1))
+       (nesne-çiz (nesne true (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                  (nesne-çiz (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                             (nesne-çiz (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0))
+                                        (nesne-çiz (nesne true (circle 10 "solid" "red") (v 50 50) (v 0 0) (v 0 0))
+                                                   (nesne-çiz (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                                                              (nesne-çiz (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0))
+                                                                         (nesne-çiz (nesne true (circle 10 "solid" "blue") (v 150 250) (v 0 0) (v 0 0))
+                                                                                    (nesne-çiz (nesne true (circle 10 "solid" "purple") (v 100 200) (v 0 0) (v 0 0)) BACKGROUND )))))))))
+
+
+(define (evren-çiz ap)
+          (nesne-çiz (evren-n1 ap)
+                                  (nesne-çiz (evren-n2 ap)
+                                                          (nesne-çiz (evren-n3 ap)
+                                                                                  (nesne-çiz (evren-n4 ap)
+                                                                                                          (nesne-çiz (evren-n5 ap)
+                                                                                                                                  (nesne-çiz (evren-n6 ap)
+                                                                                                                                                          (nesne-çiz (evren-n7 ap)
+                                                                                                                                                                     (nesne-çiz (evren-n8 ap) (evren-arkaplanı ap) )))))))))
+
+;evren-güncelle evren -> evren
+;evrenin nesnelerini ve sayacını günceller
+(define (evren-güncelle e)
+  (evren (evren-arkaplanı e)
+         (death-check (death-check (death-check (fizik-düzelt(nesne-fizik-güncelle (evren-n1 e)) 1) (evren-n6 e))(evren-n7 e))(evren-n8 e))
+         (cond ((nesne-hayat (evren-n2 e)) (death-check (death-check (death-check (fizik-düzelt(nesne-fizik-güncelle (evren-n2 e)) 2) (evren-n3 e))(evren-n4 e))(evren-n5 e)))
+               (else space-ship-2))
+         (laser-fizik-düzelt(nesne-fizik-güncelle (evren-n3 e)))
+         (laser-fizik-düzelt(nesne-fizik-güncelle (evren-n4 e)))
+         (laser-fizik-düzelt(nesne-fizik-güncelle (evren-n5 e)))
+         (düşman-laser-ateşle (evren-n2 e) (laser-fizik-düzelt(nesne-fizik-güncelle (evren-n6 e))) (düşman-ateş-sayacı (evren-s e)) 1)
+         (düşman-laser-ateşle (evren-n2 e) (laser-fizik-düzelt(nesne-fizik-güncelle (evren-n7 e))) (düşman-ateş-sayacı (evren-s e)) 2)
+         (düşman-laser-ateşle (evren-n2 e) (laser-fizik-düzelt(nesne-fizik-güncelle (evren-n8 e))) (düşman-ateş-sayacı (evren-s e)) 3)
+         (sayaç-update (evren-s e))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; SES herhangbirşey ses-dosyası-metin -> herhangibirşey
+;; birinci paramatresini aynen dönsürüyor, sesi çalarak
+(ÖRNEK (SES 0 "ses/bark.wav") 0)
+
+(test)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sabit kod bundan sonra                               ;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(yut (big-bang yaradılış
+  (on-tick evren-güncelle (/ 1.0 FRAME-RATE))
+  (on-draw evren-çiz)
+  (on-key evren-tuş)
+  (on-mouse evren-fare)
+  (on-release tuş-kontrol)))
+
